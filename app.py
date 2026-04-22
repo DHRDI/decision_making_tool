@@ -122,4 +122,4 @@ if st.button("🚀 최적의 의사결정 스타일 확인"):
             st.write(f"- {b}")
     
     st.markdown("---")
-    st.caption("👨‍🏫 본 모델은 Waterford Institute of Technology 자료를 참고하여 윤선동 대표가 설계하였습니다.")
+    st.caption("👨‍🏫 본 모델은 Waterford Institute of Technology 자료를 참고하여 DHRDI에서 제작하였습니다.")
