@@ -30,12 +30,12 @@ col1, col2 = st.columns(2)
 
 with col1:
     q1 = st.radio("1. 결정의 질: 의사결정의 질이 중요합니까?", ["예", "아니오"], key="q1", index=None)
-    q2 = st.radio("2. 수용의 중요성: 팀원들의 수용(Commitment)이 결정에 중요합니까?", ["예", "아니오"], key="q2", index=None)
+    q2 = st.radio("2. 수용의 중요성: 팀원들의 헌신(Commitment)이 결정에 중요합니까?", ["예", "아니오"], key="q2", index=None)
     q3 = st.radio("3. 정보 가용성: 리더님께 스스로 결정할 충분한 정보가 있습니까?", ["예", "아니오"], key="q3", index=None)
     q4 = st.radio("4. 문제의 구조: 해결해야 할 문제가 명확합니까?", ["예", "아니오"], key="q4", index=None)
 
 with col2:
-    q5 = st.radio("5. 수용 가능성: 리더님이 혼자 결정해도 팀원들이 지지할까요?", ["예", "아니오"], key="q5", index=None)
+    q5 = st.radio("5. 수용 가능성: 리더님이 혼자 결정해도 팀원들이 지지, 수용할까요?", ["예", "아니오"], key="q5", index=None)
     q6 = st.radio("6. 목표 공유: 구성원들이 목표를 공유하고 있습니까?", ["예", "아니오"], key="q6", index=None)
     q7 = st.radio("7. 구성원 갈등: 이 결정으로 팀원 간 마찰이 생길 것 같습니까?", ["예", "아니오"], key="q7", index=None)
 
