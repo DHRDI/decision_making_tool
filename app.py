@@ -1,32 +1,50 @@
 import streamlit as st
 
 # 1. 앱 설정
-st.set_page_config(page_title="현대이엔티 의사결정 코치", page_icon="💡", layout="wide")
+st.set_page_config(page_title="리더를 위한 의사결정 코치", page_icon="💡", layout="wide")
+
+# 버튼 및 라디오 버튼 색상 커스텀 CSS
+st.markdown("""
+    <style>
+    /* 라디오 버튼 선택 시 강조 색상 변경 */
+    div[data-testid="stWidgetSelectionState"] {
+        background-color: #e8f0fe !important;
+        border-radius: 10px;
+    }
+    /* 버튼 호버 효과 */
+    .stButton>button:hover {
+        border-color: #4CAF50;
+        color: #4CAF50;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # 제목 및 안내
-st.title("💡 현대이엔티 책임리더 의사결정 코치")
+st.title("💡 리더를 위한 의사결정 코치")
 st.markdown("---")
-st.info("이슈별 의사결정 방법을 선택할 때 참고할 수 있는 심플한 진단입니다.")
+st.info("이슈별 의사결정 방법을 선택할 때 참고할 수 있는 심플한 진단입니다. 각 문항을 예, 아니오 중 하나에 체크하면 됩니다.")
 
-# 2. 7문항 전체 배치 (한 페이지에 노출)
+# 2. 7문항 배치 (기본값을 None으로 설정하여 선택을 유도)
 st.subheader("📋 상황 진단 (Decision Tree)")
 col1, col2 = st.columns(2)
 
 with col1:
-    q1 = st.radio("1. 결정의 질: 의사결정의 질이 중요합니까?", ["예", "아니오"], key="q1")
-    q2 = st.radio("2. 수용의 중요성: 팀원들의 수용(Commitment)이 결정에 중요합니까?", ["예", "아니오"], key="q2")
-    q3 = st.radio("3. 정보 가용성: 리더님께 스스로 결정할 충분한 정보가 있습니까?", ["예", "아니오"], key="q3")
-    q4 = st.radio("4. 문제의 구조: 해결해야 할 문제가 명확합니까?", ["예", "아니오"], key="q4")
+    q1 = st.radio("1. 결정의 질: 의사결정의 질이 중요합니까?", ["예", "아니오"], key="q1", index=None)
+    q2 = st.radio("2. 수용의 중요성: 팀원들의 수용(Commitment)이 결정에 중요합니까?", ["예", "아니오"], key="q2", index=None)
+    q3 = st.radio("3. 정보 가용성: 리더님께 스스로 결정할 충분한 정보가 있습니까?", ["예", "아니오"], key="q3", index=None)
+    q4 = st.radio("4. 문제의 구조: 해결해야 할 문제가 명확합니까?", ["예", "아니오"], key="q4", index=None)
 
 with col2:
-    q5 = st.radio("5. 수용 가능성: 리더님이 혼자 결정해도 팀원들이 지지할까요?", ["예", "아니오"], key="q5")
-    q6 = st.radio("6. 목표 공유: 구성원들이 목표를 공유하고 있습니까?", ["예", "아니오"], key="q6")
-    q7 = st.radio("7. 구성원 갈등: 이 결정으로 팀원 간 마찰이 생길 것 같습니까?", ["예", "아니오"], key="q7")
+    q5 = st.radio("5. 수용 가능성: 리더님이 혼자 결정해도 팀원들이 지지할까요?", ["예", "아니오"], key="q5", index=None)
+    q6 = st.radio("6. 목표 공유: 구성원들이 목표를 공유하고 있습니까?", ["예", "아니오"], key="q6", index=None)
+    q7 = st.radio("7. 구성원 갈등: 이 결정으로 팀원 간 마찰이 생길 것 같습니까?", ["예", "아니오"], key="q7", index=None)
 
 st.markdown("---")
 
-# 3. 로직 엔진
+# 3. 로직 엔진 (동일)
 def get_decision(ans):
+    if None in ans:
+        return "INCOMPLETE"
     v1, v2, v3, v4, v5, v6, v7 = ans
     if v1 == "아니오":
         if v2 == "아니오": return "AI"
@@ -54,9 +72,8 @@ def get_decision(ans):
                         if v6 == "예": return "GII" if v7 == "예" else "CII"
                         else: return "CII"
 
-# 4. 결과 출력용 데이터
+# 4. 결과 출력용 데이터 (동일)
 style_map = {"AI": "AI (독단형)", "AII": "AII (정보수집형)", "CI": "CI (개별 협의형)", "CII": "CII (집단 협의형)", "GII": "GII (위임형)"}
-
 content = {
     "AI": {
         "one": "빠르게 혼자 결정하다",
@@ -97,8 +114,12 @@ content = {
 
 # 5. 실행 및 출력
 if st.button("🚀 최적의 의사결정 스타일 확인"):
-    res_code = get_decision([q1, q2, q3, q4, q5, q6, q7])
-    if res_code:
+    ans_list = [q1, q2, q3, q4, q5, q6, q7]
+    res_code = get_decision(ans_list)
+    
+    if res_code == "INCOMPLETE":
+        st.warning("⚠️ 모든 문항에 답변해 주세요!")
+    else:
         sel = content[res_code]
         st.success(f"### 추천 스타일: {style_map[res_code]}")
         st.info(f"**📣 {sel['one']}**")
